@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https:;"
+    />
+    <title>LoanCalc Admin - Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2 class="text-center">LoanCalc Admin - Dashboard</h2>
+      <button id="logoutButton" class="btn btn-danger mb-3">
+        Cerrar Sesión
+      </button>
+
+      <h3>Cargar Nuevo Producto</h3>
+      <form id="productForm" class="mb-5">
+        <div class="mb-3">
+          <label for="name" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="name" required />
+        </div>
+        <div class="mb-3">
+          <label for="type" class="form-label">Tipo de Maquinaria</label>
+          <select class="form-control" id="type" required>
+            <option value="pala_cargadora">Pala Cargadora</option>
+            <option value="tractor">Tractor</option>
+            <option value="montacargas">Montacargas</option>
+            <option value="apilador">Apilador</option>
+            <option value="apilador">Retro Pala</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Precio</label>
+          <input
+            type="number"
+            class="form-control"
+            id="price"
+            step="0.01"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="currency" class="form-label">Moneda</label>
+          <select class="form-control" id="currency" required>
+            <option value="GS">Guaraníes (₲)</option>
+            <option value="USD">Dólares (USD)</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="features" class="form-label">Características</label>
+          <textarea class="form-control" id="features" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">Imagen</label>
+          <input type="file" class="form-control" id="image" accept="image/*" />
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitButton">
+          <span id="submitText">Cargar Producto</span>
+          <span
+            id="loadingSpinner"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            style="display: none"
+          ></span>
+        </button>
+      </form>
+
+      <h3>Productos Existentes</h3>
+      <table class="table table-bordered" id="productsTable">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Precio</th>
+            <th>Moneda</th>
+            <th>Características</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="productsBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Modal de confirmación para eliminación -->
+    <div
+      class="modal fade"
+      id="deleteModal"
+      tabindex="-1"
+      aria-labelledby="deleteModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">
+              Confirmar Eliminación
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que deseas eliminar este producto?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirmDeleteButton"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "loan-calc-admin",
+  "version": "1.0.0",
+  "description": "App de administración para LoanCalc",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Antonio Barrios",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^31.3.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
+    "firebase": "^10.12.5",
+    "loan-calc-admin": "file:"
+  }
+}
