@@ -43,16 +43,7 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
      FIREBASE_APP_ID=tu-app-id
      FIREBASE_MEASUREMENT_ID=tu-measurement-id
      ```
-   - Ejemplo (reemplaza con tus valores):
-     ```
-     FIREBASE_API_KEY=AIzaSyBmwJUdCOmeSufwNwKziwAxi9evNOPug_M
-     FIREBASE_AUTH_DOMAIN=presupuestos-6a894.firebaseapp.com
-     FIREBASE_PROJECT_ID=presupuestos-6a894
-     FIREBASE_STORAGE_BUCKET=presupuestos-6a894.firebasestorage.app
-     FIREBASE_MESSAGING_SENDER_ID=554356368429
-     FIREBASE_APP_ID=1:554356368429:web:4655d42d6c8802cc72c4a4
-     FIREBASE_MEASUREMENT_ID=G-MY2GQE2L48
-     ```
+
 
 3. **Configura Firebase Authentication**:
    - Asegúrate de que el método de autenticación Email/Password esté habilitado en Firebase (Authentication > Sign-in method).
