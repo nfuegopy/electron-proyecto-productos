@@ -44,6 +44,7 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
      FIREBASE_MEASUREMENT_ID=tu-measurement-id
      ```
 
+
 3. **Configura Firebase Authentication**:
    - Asegúrate de que el método de autenticación Email/Password esté habilitado en Firebase (Authentication > Sign-in method).
    - Crea un usuario administrador en Firebase Authentication:
