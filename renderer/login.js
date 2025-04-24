@@ -29,7 +29,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   try {
     const result = await window.electron.login(email, password);
     if (result.success) {
-      window.location.href = 'dashboard.html';
+      // Redirigir a home.html después del login
+      window.location.href = 'home.html';
     } else {
       errorMessage.textContent = result.error;
       errorMessage.style.display = 'block';
