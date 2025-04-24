@@ -2,7 +2,7 @@
 
 ## Descripción
 
-**Electron Proyecto Productos** es una aplicación de escritorio desarrollada con Electron.js para administrar productos en un catálogo. Permite a los administradores iniciar sesión, cargar nuevos productos (con nombre, tipo, precio, moneda, características e imagen), listar productos existentes y eliminarlos. La aplicación utiliza Firebase como backend para autenticación, almacenamiento de datos (Firestore) e imágenes (Storage).
+**Electron Proyecto Productos** es una aplicación de escritorio desarrollada con Electron.js para administrar productos en un catálogo. Permite a los administradores iniciar sesión, cargar nuevos productos (con campos como nombre, tipo de maquinaria, marca, movido a, modelo, precio, moneda, características e imagen), listar productos existentes, editarlos y eliminarlos. La aplicación utiliza Firebase como backend para autenticación, almacenamiento de datos (Firestore) e imágenes (Storage). Incluye un diseño minimalista e intuitivo, con opciones como "Recordar usuario" en el login para una mejor experiencia.
 
 ## Requisitos Previos
 
@@ -68,12 +68,13 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
 3. Inicia sesión con las credenciales de administrador:
    - **Correo**: `admin@test.com`
    - **Contraseña**: `admin123`
-4. Una vez autenticado, podrás cargar, listar y eliminar productos desde el dashboard.
+4. Una vez autenticado, podrás cargar, listar, editar y eliminar productos desde el dashboard.
 
 ## Notas Adicionales
 
 - **Seguridad**: Actualmente, cualquier usuario autenticado puede subir imágenes y eliminar productos. En producción, se recomienda implementar validación de roles en Firebase Storage para restringir estas operaciones a administradores.
 - **Dependencias**: El proyecto utiliza Electron.js, Firebase y Bootstrap. Asegúrate de tener todas las dependencias instaladas (`npm install`).
+- **Funcionalidad de "Recordar usuario"**: El login incluye una opción para memorizar las credenciales del usuario, autocompletándolas al iniciar la aplicación.
 - **Soporte**: Si encuentras problemas, revisa la consola de Electron para ver los logs de error. Puedes abrir la consola ejecutando `npm start -- --enable-logging`.
 
 ---
