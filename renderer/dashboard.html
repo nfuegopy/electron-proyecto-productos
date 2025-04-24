@@ -23,6 +23,7 @@
         font-family: "Poppins", sans-serif;
         color: #333;
         margin: 0;
+        padding-top: 70px; /* Espacio para el top bar */
       }
       .container {
         max-width: 1400px;
@@ -208,11 +209,6 @@
   </head>
   <body>
     <div class="container">
-      <div class="header">
-        <img src="../assets/logo.png" alt="Logo de la Empresa" class="logo" />
-        <button id="logoutButton" class="btn btn-logout">Cerrar Sesión</button>
-      </div>
-
       <div class="card">
         <h3 id="formTitle">Cargar Nuevo Producto</h3>
         <form id="productForm">
@@ -385,6 +381,7 @@
     </div>
 
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="loadTopbar.js"></script>
     <script src="dashboard.js"></script>
   </body>
 </html>

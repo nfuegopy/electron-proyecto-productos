@@ -1,0 +1,77 @@
+<nav class="navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="home.html">
+      <img src="../assets/logo.png" alt="Engiene SA Logo" />
+    </a>
+    <div class="d-flex align-items-center">
+      <a class="nav-link" href="dashboard.html">Cargar Productos</a>
+      <a class="nav-link" href="createUser.html">Crear Usuarios</a>
+      <button id="logoutButton" class="btn btn-logout">Cerrar Sesión</button>
+    </div>
+  </div>
+</nav>
+<style>
+  .navbar {
+    background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 15px 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
+  .navbar-brand img {
+    max-width: 100px; /* Aumentamos el tamaño del logo */
+    margin-right: 10px;
+  }
+  .nav-link {
+    color: #dcdcdc !important;
+    font-size: 1.1rem;
+    margin: 0 15px;
+    position: relative;
+    transition: color 0.3s ease;
+    font-family: "Poppins", sans-serif;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: #3498db;
+    transition: width 0.3s ease;
+  }
+  .nav-link:hover {
+    color: #ffffff !important;
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
+  .btn-logout {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: "Poppins", sans-serif;
+  }
+  .btn-logout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+  }
+</style>
+<script>
+  document
+    .getElementById("logoutButton")
+    .addEventListener("click", async () => {
+      await window.electron.logout();
+      window.location.href = "index.html";
+    });
+</script>
