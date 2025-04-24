@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { getFirestore, collection, getDocs, addDoc, doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import dotenv from 'dotenv';
 
@@ -27,4 +27,4 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 // Exportar servicios y funciones
-export { auth, db, storage, signInWithEmailAndPassword, signOut, collection, getDocs, addDoc, doc, getDoc, deleteDoc, ref, uploadBytes, getDownloadURL, deleteObject };
+export { auth, db, storage, signInWithEmailAndPassword, signOut, collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL, deleteObject };

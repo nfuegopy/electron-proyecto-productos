@@ -2,7 +2,7 @@
 
 ## Descripción
 
-**Electron Proyecto Productos** es una aplicación de escritorio desarrollada con Electron.js para administrar productos en un catálogo. Permite a los administradores iniciar sesión, cargar nuevos productos (con nombre, tipo, precio, moneda, características e imagen), listar productos existentes y eliminarlos. La aplicación utiliza Firebase como backend para autenticación, almacenamiento de datos (Firestore) e imágenes (Storage).
+**Electron Proyecto Productos** es una aplicación de escritorio desarrollada con Electron.js para administrar productos en un catálogo. Permite a los administradores iniciar sesión, cargar nuevos productos (con campos como nombre, tipo de maquinaria, marca, movido a, modelo, precio, moneda, características e imagen), listar productos existentes, editarlos y eliminarlos. La aplicación utiliza Firebase como backend para autenticación, almacenamiento de datos (Firestore) e imágenes (Storage). Incluye un diseño minimalista e intuitivo, con opciones como "Recordar usuario" en el login para una mejor experiencia.
 
 ## Requisitos Previos
 
@@ -43,16 +43,6 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
      FIREBASE_APP_ID=tu-app-id
      FIREBASE_MEASUREMENT_ID=tu-measurement-id
      ```
-   - Ejemplo (reemplaza con tus valores):
-     ```
-     FIREBASE_API_KEY=AIzaSyBmwJUdCOmeSufwNwKziwAxi9evNOPug_M
-     FIREBASE_AUTH_DOMAIN=presupuestos-6a894.firebaseapp.com
-     FIREBASE_PROJECT_ID=presupuestos-6a894
-     FIREBASE_STORAGE_BUCKET=presupuestos-6a894.firebasestorage.app
-     FIREBASE_MESSAGING_SENDER_ID=554356368429
-     FIREBASE_APP_ID=1:554356368429:web:4655d42d6c8802cc72c4a4
-     FIREBASE_MEASUREMENT_ID=G-MY2GQE2L48
-     ```
 
 3. **Configura Firebase Authentication**:
    - Asegúrate de que el método de autenticación Email/Password esté habilitado en Firebase (Authentication > Sign-in method).
@@ -77,12 +67,13 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado lo siguiente:
 3. Inicia sesión con las credenciales de administrador:
    - **Correo**: `admin@test.com`
    - **Contraseña**: `admin123`
-4. Una vez autenticado, podrás cargar, listar y eliminar productos desde el dashboard.
+4. Una vez autenticado, podrás cargar, listar, editar y eliminar productos desde el dashboard.
 
 ## Notas Adicionales
 
 - **Seguridad**: Actualmente, cualquier usuario autenticado puede subir imágenes y eliminar productos. En producción, se recomienda implementar validación de roles en Firebase Storage para restringir estas operaciones a administradores.
 - **Dependencias**: El proyecto utiliza Electron.js, Firebase y Bootstrap. Asegúrate de tener todas las dependencias instaladas (`npm install`).
+- **Funcionalidad de "Recordar usuario"**: El login incluye una opción para memorizar las credenciales del usuario, autocompletándolas al iniciar la aplicación.
 - **Soporte**: Si encuentras problemas, revisa la consola de Electron para ver los logs de error. Puedes abrir la consola ejecutando `npm start -- --enable-logging`.
 
 ---
