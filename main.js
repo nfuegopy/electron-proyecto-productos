@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { auth, db, storage, signInWithEmailAndPassword, signOut, collection, getDocs, addDoc, doc, getDoc, deleteDoc, ref, uploadBytes, getDownloadURL, deleteObject, updateDoc } from './firebase.js';
+import XLSX from 'xlsx';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -161,6 +162,49 @@ ipcMain.handle('delete-product', async (event, productId) => {
     }
     await deleteDoc(doc(db, 'products', productId));
     return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Cargar archivo Excel masivamente
+ipcMain.handle('upload-excel', async (event, excelFile) => {
+  try {
+    // Leer el archivo Excel
+    const workbook = XLSX.read(Buffer.from(excelFile.data), { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const data = XLSX.utils.sheet_to_json(sheet);
+
+    let count = 0;
+    for (const row of data) {
+      // Mapear los campos del Excel a la estructura de Firestore
+      const productData = {
+        articleNumber: row['Número de artículo'] || '',
+        name: row['Descripción del artículo'] || '',
+        type: row['Tipo'] || '',
+        brand: row['Marca'] ? row['Marca'].toLowerCase() : '',
+        model: row['Modelo'] || '',
+        fuelType: '', // No está en el Excel, dejar vacío
+        price: 0, // No está en el Excel, establecer en 0
+        currency: 'USD', // Predeterminado en USD
+        features: '', // No está en el Excel, dejar vacío
+        image_url: '', // No hay imágenes en el Excel
+        created_at: new Date().toISOString()
+      };
+
+      // Validar campos obligatorios
+      if (!productData.articleNumber || !productData.name || !productData.type || !productData.brand || !productData.model) {
+        console.warn('Fila omitida por datos incompletos:', productData);
+        continue;
+      }
+
+      // Guardar en Firestore
+      await addDoc(collection(db, 'products'), productData);
+      count++;
+    }
+
+    return { success: true, count };
   } catch (error) {
     return { success: false, error: error.message };
   }
