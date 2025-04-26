@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.5",
     "dotenv": "^16.4.5",
     "firebase": "^10.12.5",
-    "loan-calc-admin": "file:"
+    "loan-calc-admin": "file:",
+    "xlsx": "^0.18.5"
   }
 }
