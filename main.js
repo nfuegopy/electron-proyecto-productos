@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { auth, db, storage, signInWithEmailAndPassword, signOut, collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL, deleteObject } from './firebase.js';
+import { auth, db, storage, signInWithEmailAndPassword, signOut, collection, getDocs, addDoc, doc, getDoc, deleteDoc, ref, uploadBytes, getDownloadURL, deleteObject, updateDoc } from './firebase.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,13 +16,11 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     }
   });
-
   win.loadFile(path.join(__dirname, 'renderer/index.html'));
 }
 
 app.whenReady().then(() => {
   createWindow();
-
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
@@ -39,26 +37,21 @@ app.on('window-all-closed', () => {
 // Manejar login
 ipcMain.handle('login', async (event, email, password) => {
   try {
-    console.log('Intentando autenticar usuario:', email);
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    console.log('Usuario autenticado, UID:', user.uid);
+    console.log('UID del usuario autenticado:', user.uid);
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists()) {
       console.log('Datos del usuario en Firestore:', userDoc.data());
       if (userDoc.data().role === 'admin') {
-        console.log('Usuario es administrador');
         return { success: true };
       } else {
-        console.log('Usuario no es administrador, rol:', userDoc.data().role);
         throw new Error('Acceso denegado: Solo los administradores pueden iniciar sesión.');
       }
     } else {
-      console.log('Documento de usuario no encontrado para UID:', user.uid);
       throw new Error('Usuario no encontrado en la base de datos.');
     }
   } catch (error) {
-    console.log('Error en autenticación:', error.message);
     return { success: false, error: error.message };
   }
 });
@@ -79,14 +72,14 @@ ipcMain.handle('load-products', async () => {
   return products;
 });
 
-// Obtener un producto por ID
+// Obtener un producto
 ipcMain.handle('get-product', async (event, productId) => {
   try {
     const productDoc = await getDoc(doc(db, 'products', productId));
     if (productDoc.exists()) {
       return { success: true, data: { id: productDoc.id, ...productDoc.data() } };
     } else {
-      throw new Error('Producto no encontrado.');
+      return { success: false, error: 'Producto no encontrado' };
     }
   } catch (error) {
     return { success: false, error: error.message };
@@ -105,8 +98,8 @@ ipcMain.handle('add-product', async (event, productData, imageFile) => {
       await uploadBytes(storageRef, imageBuffer);
       imageUrl = await getDownloadURL(storageRef);
     }
-
     const docRef = await addDoc(collection(db, 'products'), {
+      articleNumber: productData.articleNumber,
       name: productData.name,
       type: productData.type,
       brand: productData.brand,
@@ -118,7 +111,6 @@ ipcMain.handle('add-product', async (event, productData, imageFile) => {
       image_url: imageUrl,
       created_at: new Date().toISOString()
     });
-
     return { success: true, id: docRef.id };
   } catch (error) {
     return { success: false, error: error.message };
@@ -128,22 +120,20 @@ ipcMain.handle('add-product', async (event, productData, imageFile) => {
 // Actualizar producto
 ipcMain.handle('update-product', async (event, productId, productData, imageFile) => {
   try {
-    const productDoc = await getDoc(doc(db, 'products', productId));
-    const existingProduct = productDoc.data();
-
-    let imageUrl = existingProduct.image_url || '';
+    let imageUrl = productData.image_url || '';
     if (imageFile) {
-      // Si hay una nueva imagen, eliminar la anterior si existe
-      if (imageUrl) {
-        await deleteObject(ref(storage, imageUrl));
-      }
       const imageBuffer = Buffer.from(imageFile.data);
       const storageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
       await uploadBytes(storageRef, imageBuffer);
       imageUrl = await getDownloadURL(storageRef);
+      // Eliminar la imagen anterior si existe
+      if (productData.image_url) {
+        const oldImageRef = ref(storage, productData.image_url);
+        await deleteObject(oldImageRef);
+      }
     }
-
     await updateDoc(doc(db, 'products', productId), {
+      articleNumber: productData.articleNumber,
       name: productData.name,
       type: productData.type,
       brand: productData.brand,
@@ -152,10 +142,8 @@ ipcMain.handle('update-product', async (event, productId, productData, imageFile
       price: productData.price,
       currency: productData.currency,
       features: productData.features,
-      image_url: imageUrl,
-      updated_at: new Date().toISOString()
+      image_url: imageUrl
     });
-
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
