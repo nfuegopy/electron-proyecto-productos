@@ -5,8 +5,8 @@ contextBridge.exposeInMainWorld('electron', {
   logout: () => ipcRenderer.invoke('logout'),
   loadProducts: () => ipcRenderer.invoke('load-products'),
   getProduct: (productId) => ipcRenderer.invoke('get-product', productId),
-  addProduct: (productData, imageFile) => ipcRenderer.invoke('add-product', productData, imageFile),
-  updateProduct: (productId, productData, imageFile) => ipcRenderer.invoke('update-product', productId, productData, imageFile),
+  addProduct: (productData, imageFile, imageDescriptionFile) => ipcRenderer.invoke('add-product', productData, imageFile, imageDescriptionFile),
+  updateProduct: (productId, productData, imageFile, imageDescriptionFile) => ipcRenderer.invoke('update-product', productId, productData, imageFile, imageDescriptionFile),
   deleteProduct: (productId) => ipcRenderer.invoke('delete-product', productId),
   uploadExcel: (excelFile) => ipcRenderer.invoke('upload-excel', excelFile)
 });
