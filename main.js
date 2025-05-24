@@ -88,16 +88,21 @@ ipcMain.handle('get-product', async (event, productId) => {
 });
 
 // Añadir producto
-ipcMain.handle('add-product', async (event, productData, imageFile) => {
+ipcMain.handle('add-product', async (event, productData, imageFile, imageDescriptionFile) => {
   try {
     let imageUrl = '';
+    let imageDescriptionUrl = '';
     if (imageFile) {
-      const currentUser = auth.currentUser;
-      console.log('Usuario autenticado antes de subir imagen:', currentUser ? currentUser.uid : 'No autenticado');
       const imageBuffer = Buffer.from(imageFile.data);
       const storageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
       await uploadBytes(storageRef, imageBuffer);
       imageUrl = await getDownloadURL(storageRef);
+    }
+    if (imageDescriptionFile) {
+      const imageDescriptionBuffer = Buffer.from(imageDescriptionFile.data);
+      const storageRef = ref(storage, `products/${Date.now()}_${imageDescriptionFile.name}`);
+      await uploadBytes(storageRef, imageDescriptionBuffer);
+      imageDescriptionUrl = await getDownloadURL(storageRef);
     }
     const docRef = await addDoc(collection(db, 'products'), {
       articleNumber: productData.articleNumber,
@@ -110,6 +115,7 @@ ipcMain.handle('add-product', async (event, productData, imageFile) => {
       currency: productData.currency,
       features: productData.features,
       image_url: imageUrl,
+      image_description_url: imageDescriptionUrl,
       created_at: new Date().toISOString()
     });
     return { success: true, id: docRef.id };
@@ -119,9 +125,10 @@ ipcMain.handle('add-product', async (event, productData, imageFile) => {
 });
 
 // Actualizar producto
-ipcMain.handle('update-product', async (event, productId, productData, imageFile) => {
+ipcMain.handle('update-product', async (event, productId, productData, imageFile, imageDescriptionFile) => {
   try {
     let imageUrl = productData.image_url || '';
+    let imageDescriptionUrl = productData.image_description_url || '';
     if (imageFile) {
       const imageBuffer = Buffer.from(imageFile.data);
       const storageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
@@ -130,6 +137,17 @@ ipcMain.handle('update-product', async (event, productId, productData, imageFile
       // Eliminar la imagen anterior si existe
       if (productData.image_url) {
         const oldImageRef = ref(storage, productData.image_url);
+        await deleteObject(oldImageRef);
+      }
+    }
+    if (imageDescriptionFile) {
+      const imageDescriptionBuffer = Buffer.from(imageDescriptionFile.data);
+      const storageRef = ref(storage, `products/${Date.now()}_${imageDescriptionFile.name}`);
+      await uploadBytes(storageRef, imageDescriptionBuffer);
+      imageDescriptionUrl = await getDownloadURL(storageRef);
+      // Eliminar la imagen anterior si existe
+      if (productData.image_description_url) {
+        const oldImageRef = ref(storage, productData.image_description_url);
         await deleteObject(oldImageRef);
       }
     }
@@ -143,7 +161,8 @@ ipcMain.handle('update-product', async (event, productId, productData, imageFile
       price: productData.price,
       currency: productData.currency,
       features: productData.features,
-      image_url: imageUrl
+      image_url: imageUrl,
+      image_description_url: imageDescriptionUrl
     });
     return { success: true };
   } catch (error) {
@@ -159,6 +178,10 @@ ipcMain.handle('delete-product', async (event, productId) => {
     if (product.image_url) {
       const imageRef = ref(storage, product.image_url);
       await deleteObject(imageRef);
+    }
+    if (product.image_description_url) {
+      const imageDescriptionRef = ref(storage, product.image_description_url);
+      await deleteObject(imageDescriptionRef);
     }
     await deleteDoc(doc(db, 'products', productId));
     return { success: true };
@@ -190,6 +213,7 @@ ipcMain.handle('upload-excel', async (event, excelFile) => {
         currency: 'USD', // Predeterminado en USD
         features: '', // No está en el Excel, dejar vacío
         image_url: '', // No hay imágenes en el Excel
+        image_description_url: '', // No hay imágenes en el Excel
         created_at: new Date().toISOString()
       };
 

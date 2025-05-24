@@ -31,6 +31,7 @@ async function loadProducts() {
         <td>${product.currency}</td>
         <td>${product.features || ''}</td>
         <td>${product.image_url ? `<img src="${product.image_url}" alt="Producto">` : 'Sin imagen'}</td>
+        <td>${product.image_description_url ? `<img src="${product.image_description_url}" alt="Descripción">` : 'Sin imagen'}</td>
         <td>
           <button class="btn btn-warning btn-sm edit-btn" data-id="${product.id}">Editar</button>
           <button class="btn btn-danger btn-sm delete-btn" data-id="${product.id}">Eliminar</button>
@@ -103,6 +104,7 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
   const currency = document.getElementById('currency').value;
   const features = document.getElementById('features').value;
   const image = document.getElementById('image').files[0];
+  const imageDescription = document.getElementById('imageDescription').files[0];
 
   // Validaciones
   if (price <= 0) {
@@ -126,7 +128,7 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
     const productData = { articleNumber, name, type, brand, fuelType, model, price, currency, features };
     if (productId) {
       // Actualizar producto existente
-      const result = await window.electron.updateProduct(productId, productData, image);
+      const result = await window.electron.updateProduct(productId, productData, image, imageDescription);
       if (result.success) {
         alert('Producto actualizado exitosamente');
       } else {
@@ -134,7 +136,7 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
       }
     } else {
       // Cargar nuevo producto
-      const result = await window.electron.addProduct(productData, image ? { name: image.name, data: await image.arrayBuffer() } : null);
+      const result = await window.electron.addProduct(productData, image ? { name: image.name, data: await image.arrayBuffer() } : null, imageDescription ? { name: imageDescription.name, data: await imageDescription.arrayBuffer() } : null);
       if (result.success) {
         alert('Producto cargado exitosamente');
       } else {
